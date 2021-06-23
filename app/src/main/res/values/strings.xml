@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Meow</string>
+    <string name="fab_content_desc">Add new meow</string>
+</resources>
