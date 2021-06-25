@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/MeowFragment">
+
+    <fragment
+        android:id="@+id/MeowFragment"
+        android:name="com.llv.meow.MeowFragment"
+        android:label="Meow"
+        tools:layout="@layout/meow_fragment">
+
+        <action
+            android:id="@+id/action_meow_to_meowLib"
+            app:destination="@id/CatLibFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/CatLibFragment"
+        android:name="com.llv.meow.CatLibFragment"
+        android:label="Meow Lib"
+        tools:layout="@layout/cat_lib_fragment">
+
+        <action
+            android:id="@+id/action_SecondFragment_to_FirstFragment"
+            app:destination="@id/MeowFragment" />
+    </fragment>
+</navigation>

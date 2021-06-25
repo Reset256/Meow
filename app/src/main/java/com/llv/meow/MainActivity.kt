@@ -1,72 +1,59 @@
 package com.llv.meow
 
 import android.os.Bundle
-import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import com.google.android.material.snackbar.Snackbar
+import com.llv.meow.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
 
-    private val meowMap by lazy {
-        MeowMap().apply {
-            addRes(Mood.ANGRY, R.drawable.angry_cat, R.raw.angry_meow)
-            addRes(Mood.GRUMPY, R.drawable.grumpy_cat, R.raw.grumpy_meow)
-            addRes(Mood.SAD, R.drawable.sad_cat, R.raw.sad_meow)
-            addRes(Mood.SMILEY, R.drawable.smiley_cat, R.raw.usual_meow)
-            addRes(Mood.PURR, R.drawable.purr_purr, R.raw.purr)
-        }
-    }
-
-    private val animationOnClick: (View) -> Unit = {
-        val animator = it.animate()
-        animator.scaleXBy(0.15f).scaleYBy(0.15f).setDuration(500L)
-            .withEndAction { animator.scaleX(1f).scaleY(1f) }
-    }
-
-    private val playerPool: MediaPlayerPool by lazy {
-        MediaPlayerPool(this, 4)
-    }
-
-    private lateinit var vList: LinearLayout
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        vList = findViewById(R.id.act1)
-//        findViewById<View>(R.id.add_meow_button).setOnClickListener {
-//            fragmentManager.beginTransaction().replace(R.id.cat_lib_frame, CatLibFragment()).addToBackStack(null).commit()
-//        }
-        findViewById<View>(R.id.add_meow_button).setOnClickListener {
-            supportFragmentManager.beginTransaction().run {
-                replace(R.id.cat_lib_frame, CatLibFragment())
-                commit()
-            }
-        }
-        showCatLayout(meowMap)
 
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-    }
+//        setSupportActionBar(binding.toolbar)
 
-    private fun showCatLayout(catMap: MeowMap) {
-        val inflater = layoutInflater
-        for (mood in Mood.values()) {
-            val view = inflater.inflate(R.layout.cat_item, vList, false)
-            val catImageView = view.findViewById<ImageView>(R.id.item_cat)
-            catImageView.setImageDrawable(
-                ContextCompat.getDrawable(
-                    applicationContext,
-                    catMap.getPicId(mood)
-                )
-            )
-            val resId = catMap.getAudioId(mood) ?: 0
-            catImageView.setOnClickListener {
-                animationOnClick(it)
-                playerPool.playSound(resId)
-            }
-            vList.addView(view)
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        appBarConfiguration = AppBarConfiguration(navController.graph)
+        setupActionBarWithNavController(navController, appBarConfiguration)
+
+        binding.fab.setOnClickListener { view ->
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        return when (item.itemId) {
+            R.id.action_settings -> true
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        return navController.navigateUp(appBarConfiguration)
+                || super.onSupportNavigateUp()
+    }
 }
